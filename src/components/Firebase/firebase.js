@@ -14,17 +14,39 @@ const firebaseConfig = {
   appId: import.meta.env.VITE_FIREBASE_APP_ID
 };
 
-// Debug: Check if environment variables are loaded
+// Check if environment variables are loaded
 if (!import.meta.env.VITE_FIREBASE_API_KEY) {
-  console.error('❌ VITE_FIREBASE_API_KEY is not set!');
-} else {
-  console.log('✅ Firebase API Key loaded:', import.meta.env.VITE_FIREBASE_API_KEY.substring(0, 20) + '...');
+  throw new Error('VITE_FIREBASE_API_KEY is not set!');
 }
 
 if (!import.meta.env.VITE_FIREBASE_PROJECT_ID) {
-  console.error('❌ VITE_FIREBASE_PROJECT_ID is not set!');
-} else {
-  console.log('✅ Firebase Project ID loaded:', import.meta.env.VITE_FIREBASE_PROJECT_ID);
+  throw new Error('VITE_FIREBASE_PROJECT_ID is not set!');
+}
+
+// Suppress Chrome extension errors that don't affect functionality
+if (typeof window !== 'undefined') {
+  // Override console.error to filter out extension-related errors
+  const originalConsoleError = console.error;
+  console.error = (...args) => {
+    const message = args.join(' ');
+    // Filter out Chrome extension runtime errors
+    if (message.includes('Extension context invalidated') ||
+        message.includes('message port closed') ||
+        message.includes('runtime.lastError')) {
+      return; // Suppress these errors
+    }
+    originalConsoleError.apply(console, args);
+  };
+
+  // Handle unhandled promise rejections from extensions
+  window.addEventListener('unhandledrejection', (event) => {
+    if (event.reason && typeof event.reason === 'string') {
+      if (event.reason.includes('Extension context invalidated') ||
+          event.reason.includes('message port closed')) {
+        event.preventDefault(); // Prevent the error from appearing
+      }
+    }
+  });
 }
 
 // Initialize Firebase
