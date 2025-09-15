@@ -14,6 +14,19 @@ const firebaseConfig = {
   appId: import.meta.env.VITE_FIREBASE_APP_ID
 };
 
+// Debug: Check if environment variables are loaded
+if (!import.meta.env.VITE_FIREBASE_API_KEY) {
+  console.error('❌ VITE_FIREBASE_API_KEY is not set!');
+} else {
+  console.log('✅ Firebase API Key loaded:', import.meta.env.VITE_FIREBASE_API_KEY.substring(0, 20) + '...');
+}
+
+if (!import.meta.env.VITE_FIREBASE_PROJECT_ID) {
+  console.error('❌ VITE_FIREBASE_PROJECT_ID is not set!');
+} else {
+  console.log('✅ Firebase Project ID loaded:', import.meta.env.VITE_FIREBASE_PROJECT_ID);
+}
+
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 export const auth = getAuth(app);
