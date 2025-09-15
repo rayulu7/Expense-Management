@@ -1,8 +1,12 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useExpenses } from '../context/ExpenseContext'
 
 const Approvals = () => {
   const { expenses, loading, approveExpense, rejectExpense } = useExpenses()
+
+  useEffect(() => {
+    document.title = 'Approvals | Rayulu M'
+  }, [])
 
   const pendingExpenses = expenses.filter(exp => exp.status === 'submitted')
 

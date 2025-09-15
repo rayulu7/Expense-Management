@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { signInWithEmailAndPassword } from 'firebase/auth'
 import { auth } from '../Firebase/firebase'
 import { useNavigate } from 'react-router-dom'
@@ -11,12 +11,19 @@ const LoginContainer = () => {
   const [showPassword, setShowPassword] = useState(false)
   const navigate = useNavigate()
 
+  useEffect(() => {
+    document.title = 'Login | Rayulu M'
+  }, [])
+
   const handleSubmit = async (e) => {
     e.preventDefault()
     setError('')
 
     try {
       const userCredential = await signInWithEmailAndPassword(auth, email, password)
+      // Clear form fields after successful login
+      setEmail('')
+      setPassword('')
       navigate('/')
     } catch (err) {
 

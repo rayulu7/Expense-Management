@@ -1,9 +1,13 @@
-import React, { useMemo } from 'react'
+import React, { useMemo, useEffect } from 'react'
 import { useExpenses } from '../context/ExpenseContext'
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, LineChart, Line, ResponsiveContainer } from 'recharts'
 
 const Reports = () => {
   const { expenses, loading } = useExpenses()
+
+  useEffect(() => {
+    document.title = 'Reports | Rayulu M'
+  }, [])
 
   const categoryData = useMemo(() => {
     const data = {}

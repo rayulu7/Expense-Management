@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { createUserWithEmailAndPassword, updateProfile } from 'firebase/auth'
 import { auth, setUser } from '../Firebase/firebase'
 import { useNavigate } from 'react-router-dom'
@@ -14,6 +14,10 @@ const SignupContainer = () => {
   const [showPassword, setShowPassword] = useState(false)
   const [showRetypePassword, setShowRetypePassword] = useState(false)
   const navigate = useNavigate()
+
+  useEffect(() => {
+    document.title = 'Signup | Rayulu M'
+  }, [])
 
   const handleSubmit = async (e) => {
     e.preventDefault()

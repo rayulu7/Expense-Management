@@ -9,6 +9,8 @@ const Friends = () => {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
+    document.title = 'Friends | Rayulu M'
+
     const fetchOtherUsers = async () => {
       try {
         // Get all users from users collection

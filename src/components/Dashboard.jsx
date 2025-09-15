@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react'
+import React, { useMemo, useEffect } from 'react'
 import { useExpenses } from '../context/ExpenseContext'
 import { useCategories } from '../context/CategoryContext'
 import { Link } from 'react-router-dom'
@@ -7,6 +7,10 @@ import { FiTrendingUp, FiTrendingDown, FiDollarSign, FiCalendar, FiTarget, FiPie
 const Dashboard = () => {
   const { expenses, loading } = useExpenses()
   const { categories } = useCategories()
+
+  useEffect(() => {
+    document.title = 'Dashboard | Rayulu M'
+  }, [])
 
   const stats = useMemo(() => {
     const total = expenses.reduce((sum, exp) => sum + Number(exp.amount), 0)
