@@ -19,7 +19,7 @@ const Dashboard = () => {
       .filter(exp => exp.date.startsWith(thisMonth))
       .reduce((sum, exp) => sum + Number(exp.amount), 0)
 
-    // Calculate last month for comparison
+    
     const lastMonth = new Date()
     lastMonth.setMonth(lastMonth.getMonth() - 1)
     const lastMonthStr = lastMonth.toISOString().slice(0, 7)

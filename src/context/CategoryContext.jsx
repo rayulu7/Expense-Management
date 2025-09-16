@@ -1,4 +1,3 @@
-/* eslint-disable react-refresh/only-export-components */
 import React, { createContext, useContext, useEffect, useState, useCallback } from 'react'
 import { db } from '../components/Firebase/firebase'
 import { collection, addDoc, updateDoc, deleteDoc, doc, onSnapshot, query, where, orderBy, serverTimestamp } from 'firebase/firestore'
@@ -21,7 +20,7 @@ export const CategoryProvider = ({ children }) => {
       userId: user.uid,
       createdAt: serverTimestamp(),
     })
-    // Update user's total budget
+    
     try {
       await calculateAndUpdateUserStats(user.uid)
     } catch (error) {
@@ -33,7 +32,7 @@ export const CategoryProvider = ({ children }) => {
     if (!user) return
     setLoading(true)
 
-    // First try with compound query (requires index)
+   
     const q = query(
       collection(db, 'categories'),
       where('userId', '==', user.uid),
@@ -44,7 +43,7 @@ export const CategoryProvider = ({ children }) => {
       const cats = snap.docs.map(d => ({ id: d.id, ...d.data() }))
       setCategories(cats)
       setLoading(false)
-      // Add default categories if none exist
+      
       if (cats.length === 0) {
         const defaults = [
           { name: 'Food', budget: 500 },
@@ -58,7 +57,7 @@ export const CategoryProvider = ({ children }) => {
     }, (error) => {
       console.error('Error with compound query:', error)
 
-      // Fallback: Try without ordering (simpler query)
+      
       console.log('Trying fallback query without ordering...')
       const fallbackQ = query(
         collection(db, 'categories'),
@@ -67,7 +66,7 @@ export const CategoryProvider = ({ children }) => {
 
       const fallbackUnsub = onSnapshot(fallbackQ, (snap) => {
         const cats = snap.docs.map(d => ({ id: d.id, ...d.data() }))
-        // Sort client-side instead
+       
         cats.sort((a, b) => a.name.localeCompare(b.name))
         setCategories(cats)
         setLoading(false)
@@ -95,7 +94,7 @@ export const CategoryProvider = ({ children }) => {
 
   const updateCategory = async (id, updates) => {
     await updateDoc(doc(db, 'categories', id), { ...updates, updatedAt: serverTimestamp() })
-    // Update user's total budget
+    
     try {
       await calculateAndUpdateUserStats(user.uid)
     } catch (error) {
@@ -105,7 +104,7 @@ export const CategoryProvider = ({ children }) => {
 
   const deleteCategory = async (id) => {
     await deleteDoc(doc(db, 'categories', id))
-    // Update user's total budget
+    
     try {
       await calculateAndUpdateUserStats(user.uid)
     } catch (error) {

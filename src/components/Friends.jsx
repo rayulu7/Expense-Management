@@ -13,12 +13,12 @@ const Friends = () => {
 
     const fetchOtherUsers = async () => {
       try {
-        // Get all users from users collection
+       
         const allUsers = await getAllUsers()
 
-        // Filter out current user and map to display format
+       
         const userStats = allUsers
-          .filter(userData => userData.id !== user.uid) // Exclude current user
+          .filter(userData => userData.id !== user.uid) 
           .map(userData => {
             const displayName = userData.displayName || userData.firstName || userData.email || `User ${userData.id.slice(0, 8)}`
             const budget = userData.budget || 0
@@ -32,9 +32,9 @@ const Friends = () => {
             }
           })
 
-        // Sort by total spent (highest first)
+        
         userStats.sort((a, b) => b.totalSpent - a.totalSpent)
-        setOtherUsers(userStats.slice(0, 10)) // Show top 10
+        setOtherUsers(userStats.slice(0, 10)) 
       } catch (error) {
         console.error('Error fetching users:', error)
       } finally {

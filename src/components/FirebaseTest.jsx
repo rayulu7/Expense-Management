@@ -21,14 +21,13 @@ const FirebaseTest = () => {
     const results = []
 
     try {
-      // Test 1: Check if user is authenticated
+      
       results.push(`User authenticated: ${user ? 'YES' : 'NO'}`)
       if (user) {
         results.push(`User ID: ${user.uid}`)
         results.push(`User Email: ${user.email}`)
       }
 
-      // Test 2: Try to get all categories (without user filter)
       try {
         const categoriesRef = collection(db, 'categories')
         const categoriesSnap = await getDocs(categoriesRef)
@@ -40,7 +39,7 @@ const FirebaseTest = () => {
         results.push(`Error getting categories: ${error.message}`)
       }
 
-      // Test 3: Try to get categories for current user
+      
       if (user) {
         try {
           const q = query(collection(db, 'categories'), where('userId', '==', user.uid))
@@ -54,7 +53,7 @@ const FirebaseTest = () => {
         }
       }
 
-      // Test 4: Try to get all expenses
+      
       try {
         const expensesRef = collection(db, 'expenses')
         const expensesSnap = await getDocs(expensesRef)

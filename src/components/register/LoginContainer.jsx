@@ -21,13 +21,13 @@ const LoginContainer = () => {
 
     try {
       const userCredential = await signInWithEmailAndPassword(auth, email, password)
-      // Clear form fields after successful login
+      
       setEmail('')
       setPassword('')
       navigate('/')
     } catch (err) {
 
-      // More specific error messages
+      
       if (err.code === 'auth/user-not-found') {
         setError('No account found with this email. Please sign up first.')
       } else if (err.code === 'auth/wrong-password') {

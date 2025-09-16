@@ -10,7 +10,7 @@ const Leaderboard = () => {
     const now = new Date()
     let filteredExpenses = expenses
 
-    // Filter by timeframe
+   
     if (timeframe === 'month') {
       const thisMonth = now.toISOString().slice(0, 7)
       filteredExpenses = expenses.filter(exp => exp.date.startsWith(thisMonth))
@@ -19,7 +19,7 @@ const Leaderboard = () => {
       filteredExpenses = expenses.filter(exp => new Date(exp.date) >= weekAgo)
     }
 
-    // Group by category and calculate totals
+    
     const categoryTotals = {}
     filteredExpenses.forEach(expense => {
       if (!categoryTotals[expense.category]) {
@@ -33,12 +33,12 @@ const Leaderboard = () => {
       categoryTotals[expense.category].count += 1
     })
 
-    // Calculate averages
+    
     Object.keys(categoryTotals).forEach(category => {
       categoryTotals[category].avgAmount = categoryTotals[category].total / categoryTotals[category].count
     })
 
-    // Convert to array and sort by total spending
+    
     const sortedCategories = Object.entries(categoryTotals)
       .map(([category, data]) => ({
         category,

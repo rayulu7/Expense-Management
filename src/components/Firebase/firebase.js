@@ -29,7 +29,7 @@ if (typeof window !== 'undefined') {
   const originalConsoleError = console.error;
   console.error = (...args) => {
     const message = args.join(' ');
-    // Filter out Chrome extension runtime errors
+    
     if (message.includes('Extension context invalidated') ||
         message.includes('message port closed') ||
         message.includes('runtime.lastError')) {
@@ -59,7 +59,7 @@ export const expensesCollection = collection(db, "expenses");
 export const categoriesCollection = collection(db, "categories");
 export const usersCollection = collection(db, "users");
 
-// Helper functions for expenses
+
 export const addExpense = async (expenseData) => {
   return await addDoc(expensesCollection, {
     ...expenseData,
@@ -96,7 +96,7 @@ export const getUserExpenses = async (filters = {}) => {
   const userId = filters.userId || auth.currentUser.uid;
   let q = query(expensesCollection, where("userId", "==", userId));
   
-  // Apply filters if provided
+ 
   if (filters.category) {
     q = query(q, where("category", "==", filters.category));
   }
@@ -112,7 +112,7 @@ export const getUserExpenses = async (filters = {}) => {
     );
   }
   
-  // Apply sorting
+  
   const sortField = filters.sortBy || "date";
   const sortDirection = filters.sortDirection || "desc";
   q = query(q, orderBy(sortField, sortDirection));
@@ -121,7 +121,7 @@ export const getUserExpenses = async (filters = {}) => {
   return querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
 };
 
-// Helper functions for categories
+
 export const addCategory = async (categoryData) => {
   return await addDoc(categoriesCollection, {
     ...categoryData,
@@ -150,7 +150,7 @@ export const getUserCategories = async () => {
   return querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
 };
 
-// Helper function for approvals
+
 export const updateExpenseStatus = async (id, status) => {
   const expenseRef = doc(db, "expenses", id);
   return await updateDoc(expenseRef, {
@@ -159,7 +159,7 @@ export const updateExpenseStatus = async (id, status) => {
   });
 };
 
-// Helper function for getting pending approvals
+
 export const getPendingApprovals = async () => {
   const userId = auth.currentUser.uid;
   const q = query(
@@ -172,7 +172,7 @@ export const getPendingApprovals = async () => {
   return querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
 };
 
-// Helper function for getting monthly/yearly summaries
+
 export const getExpenseSummary = async (period = "monthly") => {
   const userId = auth.currentUser.uid;
   const now = new Date();
@@ -198,7 +198,7 @@ export const getExpenseSummary = async (period = "monthly") => {
   return querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
 };
 
-// Helper function for budget alerts
+
 export const checkBudgetAlerts = async () => {
   const userId = auth.currentUser.uid;
   const categories = await getUserCategories();
@@ -239,7 +239,7 @@ export const checkBudgetAlerts = async () => {
   return alerts;
 };
 
-// Helper functions for users
+
 export const addUser = async (userData) => {
   return await addDoc(usersCollection, {
     ...userData,
@@ -269,7 +269,7 @@ export const getAllUsers = async () => {
   return querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
 };
 
-// Helper function to update user budget and spent amount
+
 export const updateUserStats = async (userId, budget = null, spent = null) => {
   try {
     const userRef = doc(db, "users", userId);
@@ -284,7 +284,7 @@ export const updateUserStats = async (userId, budget = null, spent = null) => {
       updateData.updatedAt = serverTimestamp();
     }
 
-    // Use setDoc with merge to handle cases where user document doesn't exist
+    
     return await setDoc(userRef, updateData, { merge: true });
   } catch (error) {
     console.error('Error updating user stats:', error);
@@ -292,7 +292,7 @@ export const updateUserStats = async (userId, budget = null, spent = null) => {
   }
 };
 
-// Helper function to calculate total budget from user's categories
+
 export const calculateUserTotalBudget = async (userId) => {
   try {
     const q = query(categoriesCollection, where("userId", "==", userId));
@@ -306,16 +306,16 @@ export const calculateUserTotalBudget = async (userId) => {
   }
 };
 
-// Helper function to calculate and update user's total spent and budget
+
 export const calculateAndUpdateUserStats = async (userId) => {
   try {
-    // Calculate total spent
+    
     const expensesQ = query(expensesCollection, where("userId", "==", userId));
     const expensesSnapshot = await getDocs(expensesQ);
     const expenses = expensesSnapshot.docs.map(doc => doc.data());
     const totalSpent = expenses.reduce((sum, expense) => sum + (expense.amount || 0), 0);
 
-    // Calculate total budget from categories
+    
     const totalBudget = await calculateUserTotalBudget(userId);
 
     await updateUserStats(userId, totalBudget, totalSpent);
@@ -326,7 +326,7 @@ export const calculateAndUpdateUserStats = async (userId) => {
   }
 };
 
-// Keep the old function for backward compatibility
+
 export const calculateAndUpdateUserSpent = async (userId) => {
   const result = await calculateAndUpdateUserStats(userId);
   return result.totalSpent;
